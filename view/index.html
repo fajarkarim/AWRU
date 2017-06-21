@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Webpack Autchh!!</title>
+    <title>OO AwwRU!!</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"
     integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
@@ -10,12 +10,56 @@
     </script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/vue"></script>
+    <style media="screen">
+      h1.ui.header{
+        font-size: 4rem;
+      }
+    </style>
   </head>
   <body>
-
+    <div id="app">
+      <div class="ui fluid container" style="padding-top: 150px;">
+        <div class="ui middle aligned center aligned grid">
+          <div class="ui center aligned icon header">
+            <i class="massive circular first aid icon"></i>
+            <h1 class="ui header">Welcome To AwwR-U!! App</h1>
+            <p>A Simple Urgent Helper Application</p>
+            <button type="button" class="ui animated fade button" tabindex="0" style="width: 190px; height: 90px;" v-on:click="getSpeech">
+              <div class="visible content">
+                <h2>Click Here!</h2>
+              </div>
+              <div class="hidden content" style="padding-bottom:70px;">
+                <i class="unmute icon"></i>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="ui inverted bottom fixed menu">
+        <div class="item">
+          <button type="button" name="button" class="ui twitter button">
+            <i class="twitter icon"></i>
+            Twitter
+          </button>
+        </div>
+      </div>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
   </body>
   <script type="text/javascript">
-    
+    var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+    var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
+
+
+    var app = new Vue({
+      el: '#app',
+      data: {
+        listPlace: [],
+        speech: ''
+      },
+      methods: {
+
+      }
+    })
   </script>
 </html>
