@@ -24,7 +24,7 @@
             <i class="massive circular first aid icon"></i>
             <h1 class="ui header">Welcome To AwwR-U!! App</h1>
             <p>A Simple Urgent Helper Application</p>
-            <button type="button" class="ui animated fade button" tabindex="0" style="width: 190px; height: 90px;" v-on:click="getSpeech">
+            <button type="button" class="ui vertical animated button" tabindex="0" style="width: 190px; height: 90px;" v-on:click="getSpeech">
               <div class="visible content">
                 <h2>Click Here!</h2>
               </div>
@@ -32,6 +32,12 @@
                 <i class="unmute icon"></i>
               </div>
             </button>
+          </div>
+        </div>
+        <div class="ui form">
+          <div class="field">
+            <br><br>
+            <input id="record" type="text" name="" style="margin: 300px; padding-left: 550px; padding-right:400px;" v-model="speech">
           </div>
         </div>
       </div>
@@ -43,22 +49,205 @@
           </button>
         </div>
       </div>
+    <div v-if="speech == 'aduh'">
+      <div class="ui basic modal">
+        <div class="ui icon header">
+          <i class="doctor icon"></i>
+          Hey Dude! Whats Up Bro?? Are You Fine??
+        </div>
+        <div class="content">
+          <p>Whats Are You Condition Now, Please Select Your Contition, Urgent or not? We will respect your choise!</p>
+        </div>
+        <div class="actions">
+          <button class="ui green basic inverted button" v-on:click="getSickAction">
+            <i class="thumbs up icon"></i>
+            No, Thats not urgent
+          </button>
+          <button class="ui red inverted button" v-on:click="getUrgentAction">
+            <i class="frown icon"></i>
+            Yes, Please its very urgent
+          </button>
+        </div>
+      </div>
     </div>
+    <div class="ui modal">
+      <i class="close icon"></i>
+      <div class="header">
+        Emergency Warning!, we have send status on tweeter
+      </div>
+      <div class="image content">
+        <div class="ui medium image">
+          <iframe src="maps.html" width="850px" height="300px"></iframe>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="ui black deny button">
+          No, Thanks
+        </div>
+        <div class="ui positive ok right lebeled icon button">
+          Yes, Im Wanna There
+          <i class="checkmark icon"></i>
+        </div>
+      </div>
+    </div>
+    <div class="ui coba modal">
+      <i class="close icon"></i>
+      <div class="header">
+        Sick Response!, get search on google
+      </div>
+      <div class="ui text container" style="padding-bottom:10px">
+        <div class="ui form">
+          <div class="field">
+            <label>input what do you want to search</label>
+            <textarea v-model="sick"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="ui black deny button">
+          No, Thanks
+        </div>
+        <button class="ui positiv violet right lebeled icon button" v-on:click="getSpeechSearch">
+          press and speech
+          <i class="unmute icon"></i>
+        </button>
+        <button class="ui positive ok right lebeled icon button" v-on:click="toSearchPage">
+          Yes, Im Wanna There
+          <i class="google icon"></i>
+        </button>
+      </div>
+    </div>
+  </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
   </body>
   <script type="text/javascript">
     var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
     var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
-
+    //var r = document.getElementById('record');
 
     var app = new Vue({
       el: '#app',
       data: {
         listPlace: [],
-        speech: ''
+        speech: '',
+        sick: '',
+        page: ''
       },
       methods: {
+        toSearchPage: function(){
+          let self = this
+          this.page = 'http://google.com/search?q='+this.sick.split(" ").join("+");
+          window.open(this.page, '_blank');
+        },
+        getSpeechSearch: function(){
+          var self = this
+          if('webkitSpeechRecognition' in window){
+            var speechRecognizer = new webkitSpeechRecognition();
+            speechRecognizer.continuous = true;
+            speechRecognizer.interimResults = true;
+            speechRecognizer.lang = 'id-ID';
+            speechRecognizer.start();
 
+            var finalTranscripts = '';
+
+            speechRecognizer.onresult = function(event){
+              var interimTranscripts = '';
+              for(var i = event.resultIndex; i < event.results.length; i++){
+                var transcript = event.results[i][0].transcript;
+
+                transcript.replace("\n", "<br>");
+                if(event.results[i].isFinal){
+                  finalTranscripts += transcript;
+                }else{
+                  interimTranscripts += transcript;
+                }
+              }
+              self.sick = finalTranscripts + interimTranscripts ;
+              // if(self.speech === 'aduh' || 'sakit'){
+              //   self.activateModalChoose()
+              // }
+            };
+            speechRecognizer.onerror = function (event) {
+            };
+          }else{
+            self.speech = 'Your browser is not supported. If google chrome, please upgrade!';
+          }
+        },
+        getSpeech: function(){
+          var self = this
+          if('webkitSpeechRecognition' in window){
+            var speechRecognizer = new webkitSpeechRecognition();
+            speechRecognizer.continuous = true;
+            speechRecognizer.interimResults = true;
+            speechRecognizer.lang = 'id-ID';
+            speechRecognizer.start();
+
+            var finalTranscripts = '';
+
+            speechRecognizer.onresult = function(event){
+              var interimTranscripts = '';
+              for(var i = event.resultIndex; i < event.results.length; i++){
+                var transcript = event.results[i][0].transcript;
+
+                transcript.replace("\n", "<br>");
+                if(event.results[i].isFinal){
+                  finalTranscripts += transcript;
+                }else{
+                  interimTranscripts += transcript;
+                }
+              }
+              self.speech = finalTranscripts + interimTranscripts ;
+              if(self.speech === 'aduh' || 'sakit'){
+                self.activateModalChoose()
+              }
+            };
+            speechRecognizer.onerror = function (event) {
+            };
+          }else{
+            self.speech = 'Your browser is not supported. If google chrome, please upgrade!';
+          }
+
+        },
+        activateModalChoose: function(){
+          $('.ui.basic.modal')
+            .modal('show')
+          ;
+        },
+        getUrgentAction: function(){
+          let self = this
+
+          axios.post('http://localhost:3000/api/twitter')
+          .then((response)=>{
+            console.log('success to post status on twitter', response);
+          })
+          .catch((err)=>{
+            console.log(err);
+          })
+          axios.post('http://localhost:3000/api/', {
+            category: 'urgen',
+            action: 'sakit dan pergi kerumah sakit'
+          })
+          .then((response)=>{
+            console.log('success');
+          })
+          .catch((err)=>{
+            console.log(err);
+          })
+          this.getUrgentModal()
+        },
+        getSickAction: function(){
+          let self = this
+          this.getSickModal()
+        },
+        getUrgentModal: function(){
+          $('.ui.modal')
+            .modal('show')
+          ;
+        },
+        getSickModal: function() {
+          $('.ui.coba.modal')
+            .modal('show');
+        }
       }
     })
   </script>

@@ -12,7 +12,8 @@ mongoose.connect(url, (err, result)=>{
   console.log('database connected!');
 })
 
-var record = require('../routes/record');
+var record = require('./routes/record');
+var twitter = require('./routes/twitter');
 
 const app = express();
 
@@ -21,5 +22,10 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 
 app.use('/api', record);
+app.use('/api/twitter', twitter);
+
+app.listen(3000, ()=>{
+  console.log('connected on port 3000');
+})
 
 module.exports = app;

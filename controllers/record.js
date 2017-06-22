@@ -16,7 +16,7 @@ methods.show = function(req, res){
 
 methods.add = function(req, res){
   let body = req.body
-  record.record(body, (err, result)=>{
+  record.create(body, (err, result)=>{
     if(err){
       res.status(400).send({
         msg: ' Something wrong while creating data',
