@@ -23,8 +23,8 @@
   }
 
   function savePosition(position) {
-            // $.post("geocoordinates.php", {lat: position.coords.latitude, lng: position.coords.longitude});
-            alert(`lat : ${position.coords.latitude}, long: ${position.coords.longitude}`)
+            $.post("geocoordinates.php", {lat: position.coords.latitude, lng: position.coords.longitude});
+            // alert(`lat : ${position.coords.latitude}, long: ${position.coords.longitude}`)
   }
   </script>
 </head>
