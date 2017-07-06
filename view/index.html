@@ -43,9 +43,15 @@
       </div>
       <div class="ui inverted bottom fixed menu">
         <div class="item">
-          <button type="button" name="button" class="ui twitter button">
+          <button type="button" name="button" class="ui twitter button" v-on:click="toTwitterPage">
             <i class="twitter icon"></i>
             Twitter
+          </button>
+        </div>
+        <div class="item">
+          <button type="button" name="button" class="ui labeled icon button" v-on:click="getRecord">
+            <i class="grid layout icon"></i>
+            show history
           </button>
         </div>
       </div>
@@ -70,7 +76,9 @@
         </div>
       </div>
     </div>
-    <div class="ui modal">
+
+
+    <div class="ui modal" id="modal1">
       <i class="close icon"></i>
       <div class="header">
         Emergency Warning!, we have send status on tweeter
@@ -90,10 +98,12 @@
         </div>
       </div>
     </div>
-    <div class="ui coba modal">
+
+
+    <div class="ui coba modal" id="modal2">
       <i class="close icon"></i>
       <div class="header">
-        Sick Response!, get search on google
+        What do you feel?
       </div>
       <div class="ui text container" style="padding-bottom:10px">
         <div class="ui form">
@@ -117,6 +127,35 @@
         </button>
       </div>
     </div>
+
+    <div class="ui basic modal" id="modal3">
+      <i class="close icon"></i>
+      <div class="header">
+        Your History!
+      </div>
+      <div class="ui text container" style="padding-bottom:10px">
+        <table class="ui celled table">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Your Situation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="recapulation in recapulations">
+              <td>{{ recapulation.category }}</td>
+              <td>{{ recapulation.action }}</td>
+            </tr>
+          </tbody>
+        </table>
+      <div class="actions">
+        <div class="ui black deny button">
+          OK
+        </div>
+      </div>
+    </div>
+
+
   </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
   </body>
@@ -131,11 +170,38 @@
         listPlace: [],
         speech: '',
         sick: '',
-        page: ''
+        page: '',
+        category: '',
+        action: '',
+        recapulations: []
       },
       methods: {
+        getRecord: function(){
+          let self = this
+          axios.get('http://localhost:3000/api/')
+          .then((response)=>{
+            this.recapulations = response.data
+          })
+          .catch((err)=>{
+            console.log(err);
+          })
+          self.getRecordModal()
+        },
+        toTwitterPage: function(){
+          window.open('https://twitter.com/derijimmu', '_blank');
+        },
         toSearchPage: function(){
           let self = this
+          axios.post('http://localhost:3000/api/', {
+            category: 'not urgent',
+            action : `search to google about ${self.sick}`
+          })
+          .then((response)=>{
+            console.log(response);
+          })
+          .catch((err)=>{
+            console.log(err);
+          })
           this.page = 'http://google.com/search?q='+this.sick.split(" ").join("+");
           window.open(this.page, '_blank');
         },
@@ -166,6 +232,7 @@
               // if(self.speech === 'aduh' || 'sakit'){
               //   self.activateModalChoose()
               // }
+
             };
             speechRecognizer.onerror = function (event) {
             };
@@ -197,8 +264,11 @@
                 }
               }
               self.speech = finalTranscripts + interimTranscripts ;
-              if(self.speech === 'aduh' || 'sakit'){
+              if(self.speech === 'aduh'){
                 self.activateModalChoose()
+                speechRecognizer.stop()
+              } else {
+                alert('Jangan Main2 bro!!')
               }
             };
             speechRecognizer.onerror = function (event) {
@@ -240,12 +310,16 @@
           this.getSickModal()
         },
         getUrgentModal: function(){
-          $('.ui.modal')
+          $('#modal1')
             .modal('show')
           ;
         },
         getSickModal: function() {
-          $('.ui.coba.modal')
+          $('#modal2')
+            .modal('show');
+        },
+        getRecordModal: function(){
+          $('#modal3')
             .modal('show');
         }
       }
